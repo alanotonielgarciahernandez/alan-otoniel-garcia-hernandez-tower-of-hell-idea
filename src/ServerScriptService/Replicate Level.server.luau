@@ -1,4 +1,5 @@
 local RepStor = game:GetService("ReplicatedStorage");
+local timeLeft = RepStor:WaitForChild("Value");
 local LevelModule = require(RepStor.LevelModule);
 local level1 = RepStor:WaitForChild("Level1"); local level2 = RepStor:WaitForChild("Level2"); local level3 = RepStor:WaitForChild("Level3"); local level4 = RepStor:WaitForChild("Level4"); local level5 = RepStor:WaitForChild("Level5"); local level6 = RepStor:WaitForChild("Level6"); local level7 = RepStor:WaitForChild("Level7"); local level8 = RepStor:WaitForChild("Level8"); local level9 = RepStor:WaitForChild("Level9"); local level10 = RepStor:WaitForChild("Level10"); local level11 = RepStor:WaitForChild("Level11"); local level12 = RepStor:WaitForChild("Level12"); local End = RepStor:WaitForChild("End");
 local Players = game:GetService("Players");
@@ -397,9 +398,9 @@ while true do
 	else TheEnd:PivotTo(CFrame.new(0, floor + 12, 0)* CFrame.Angles(0, math.rad(0), 0)); rot = false;
 	end;
 	
-	repeat wait() until game.Workspace.Value.Value == 0;
-	
-	game.Workspace.Value.Value = 180;
+	repeat wait() until timeLeft.Value == 0;
+
+	timeLeft.Value = 100;
 	floor = 23.5;
 	
 	for i, plr in pairs(Players:GetPlayers()) do
