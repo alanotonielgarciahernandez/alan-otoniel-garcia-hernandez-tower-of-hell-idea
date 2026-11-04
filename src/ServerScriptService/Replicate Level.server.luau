@@ -1,14 +1,15 @@
 local RepStor = game:GetService("ReplicatedStorage");
+local ServerStorage = game:GetService("ServerStorage");
 local timeLeft = RepStor:WaitForChild("Value");
 local LevelModule = require(RepStor.LevelModule);
 local Players = game:GetService("Players");
 
--- Section models in the same order math.random(1, 12) used to pick.
+-- Templates stay on the server. A clone parented to Workspace is what players see.
 local sections = {};
 for index = 1, 12 do
-	sections[index] = RepStor:WaitForChild("Level" .. index);
+	sections[index] = ServerStorage:WaitForChild("Level" .. index);
 end;
-local End = RepStor:WaitForChild("End");
+local End = ServerStorage:WaitForChild("End");
 
 local floor = 23.5;
 -- Alternates the facing of each section so two in a row do not share a direction.
