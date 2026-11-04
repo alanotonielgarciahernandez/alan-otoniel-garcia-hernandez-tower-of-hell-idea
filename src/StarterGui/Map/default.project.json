@@ -1,0 +1,12 @@
+{
+  "name": "Map",
+  "tree": {
+    "$path": "gui.rbxmx",
+    "Player": {
+      "$path": "Player.rbxmx",
+      "GPS": {
+        "$path": "GPS.server.luau"
+      }
+    }
+  }
+}

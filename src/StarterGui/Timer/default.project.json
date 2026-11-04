@@ -1,0 +1,12 @@
+{
+  "name": "Timer",
+  "tree": {
+    "$path": "gui.rbxmx",
+    "Time": {
+      "$path": "Time.rbxmx",
+      "SetTime": {
+        "$path": "SetTime.client.luau"
+      }
+    }
+  }
+}

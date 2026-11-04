@@ -1,0 +1,33 @@
+{
+  "name": "Points_Store",
+  "tree": {
+    "$path": "gui.rbxmx",
+    "ImageButton": {
+      "$path": "ImageButton.rbxmx",
+      "OpenShop": {
+        "$path": "OpenShop.client.luau"
+      }
+    },
+    "TextLabel": {
+      "$path": "TextLabel.rbxmx",
+      "SetPoints": {
+        "$path": "SetPoints.client.luau"
+      }
+    },
+    "ScrollingFrame": {
+      "$path": "ScrollingFrame.rbxmx",
+      "TextButton": {
+        "$path": "TextButton.rbxmx",
+        "BT": {
+          "$path": "BT.client.luau"
+        }
+      }
+    },
+    "Exit": {
+      "$path": "Exit.rbxmx",
+      "Exit": {
+        "$path": "Exit.client.luau"
+      }
+    }
+  }
+}
