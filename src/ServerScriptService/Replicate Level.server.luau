@@ -32,7 +32,7 @@ while true do
 			rot = false;
 		end;
 
-		wait();
+		task.wait();
 		for _, plr in pairs(Players:GetPlayers()) do
 			-- Map slots are numbered 1 through 6, matching this section's place in the tower.
 			plr.PlayerGui:WaitForChild("Map")[i].BackgroundColor3 = info.Color;
@@ -54,7 +54,7 @@ while true do
 		rot = false;
 	end;
 
-	repeat wait() until timeLeft.Value == 0;
+	repeat task.wait() until timeLeft.Value == 0;
 
 	timeLeft.Value = 100;
 	floor = 23.5;
