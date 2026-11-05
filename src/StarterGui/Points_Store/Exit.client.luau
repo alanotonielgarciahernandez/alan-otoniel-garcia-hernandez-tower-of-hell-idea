@@ -1,7 +1,10 @@
-local btn = script.Parent;
-local store = btn.Parent.ScrollingFrame;
+--!strict
+
+local btn = script.Parent :: GuiButton
+local parent = btn.Parent :: GuiObject & { ScrollingFrame: ScrollingFrame }
+local store = parent.ScrollingFrame
 
 btn.MouseButton1Click:Connect(function()
-	btn.Visible = false;
-	store.Visible = false;
-end);
+	btn.Visible = false
+	store.Visible = false
+end)
