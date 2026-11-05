@@ -16,7 +16,7 @@ The copy includes:
 - A round that stacks six random sections, then an end platform, and clears them when the timer reaches zero.
 - A timer, a map bar that follows the player's height, and a points store that can add time.
 
-`Replicate Level.server.luau` builds each tower. `Timer.server.luau` counts down `Workspace.Value`. `LevelModule.luau` stores each section's name, author, and color.
+`ReplicateLevel.server.luau` builds each tower. `Timer.server.luau` counts down `Workspace.Value`. `LevelModule.luau` stores each section's name, author, and color.
 
 # How to use
 

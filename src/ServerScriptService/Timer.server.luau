@@ -4,7 +4,7 @@ local RepStor = game:GetService( 'ReplicatedStorage' );
 -- The timer label reads this same IntValue.
 local timeLeft = RepStor:WaitForChild( 'Value' );
 
--- One second per loop. Replicate Level sets the value back to 180 after it hits zero.
+-- One second per loop. ReplicateLevel sets the value back to 180 after it hits zero.
 while task.wait( 1 ) do
 	if timeLeft.Value <= 0 then
 		break;
