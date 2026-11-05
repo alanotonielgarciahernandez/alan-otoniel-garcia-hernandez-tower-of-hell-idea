@@ -3,6 +3,7 @@ local ServerStorage = game:GetService("ServerStorage");
 local timeLeft = RepStor:WaitForChild("Value");
 local LevelModule = require(RepStor.LevelModule);
 local Players = game:GetService("Players");
+local Workspace = game:GetService("Workspace");
 
 -- Templates stay on the server. A clone parented to Workspace is what players see.
 local sections = {};
@@ -23,7 +24,7 @@ while true do
 		local info = LevelModule["Level" .. random];
 
 		local clon = sections[random]:Clone();
-		clon.Parent = game.Workspace;
+		clon.Parent = Workspace;
 		if rot == false then
 			clon:PivotTo(CFrame.new(0, floor, 0) * CFrame.Angles(0, math.rad(112.5), 0));
 			rot = true;
@@ -33,7 +34,7 @@ while true do
 		end;
 
 		task.wait();
-		for _, plr in pairs(Players:GetPlayers()) do
+		for _, plr in Players:GetPlayers() do
 			-- Map slots are numbered 1 through 6, matching this section's place in the tower.
 			plr.PlayerGui:WaitForChild("Map")[i].BackgroundColor3 = info.Color;
 		end;
@@ -45,7 +46,7 @@ while true do
 	end;
 
 	local TheEnd = End:Clone();
-	TheEnd.Parent = game.Workspace;
+	TheEnd.Parent = Workspace;
 	if rot == true then
 		TheEnd:PivotTo(CFrame.new(0, floor + 12, 0) * CFrame.Angles(0, math.rad(180), 0));
 		rot = false;
@@ -59,9 +60,9 @@ while true do
 	timeLeft.Value = 100;
 	floor = 23.5;
 
-	for _, plr in pairs(Players:GetPlayers()) do
+	for _, plr in Players:GetPlayers() do
 		if plr.Character then
-			plr.Character.HumanoidRootPart.CFrame = game.Workspace.Lobby.SpawnLocation.CFrame;
+			plr.Character.HumanoidRootPart.CFrame = Workspace.Lobby.SpawnLocation.CFrame;
 		end;
 	end;
 
