@@ -8,7 +8,7 @@ local Workspace = game:GetService('Workspace') :: Workspace
 -- Round clock. A purchase adds seconds here; Timer.server.luau subtracts them.
 local timeLeft = RepStor:WaitForChild('Value') :: IntValue
 -- The store button fires this. The number it sends is checked below and is not trusted on its own.
-local buyTime = RepStor:WaitForChild('BTEvent') :: RemoteEvent
+local buyTime = RepStor:WaitForChild('Remotes'):WaitForChild('BTEvent') :: RemoteEvent
 
 local BONUS_TIME = 30 -- Seconds granted for one accepted purchase.
 local POINT_COST = 100 -- Points spent on that purchase.

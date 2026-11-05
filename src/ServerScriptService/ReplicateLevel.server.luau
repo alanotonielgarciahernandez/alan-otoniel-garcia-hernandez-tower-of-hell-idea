@@ -23,7 +23,7 @@ type SectionModel = Model & {
 	},
 }
 
-local levelModuleScript = RepStor:WaitForChild('LevelModule') :: ModuleScript
+local levelModuleScript = RepStor:WaitForChild('Modules'):WaitForChild('LevelModule') :: ModuleScript
 local LevelModule = require(levelModuleScript) :: { [string]: SectionInfo }
 
 -- Templates stay on the server. A clone parented to Workspace is what players see.

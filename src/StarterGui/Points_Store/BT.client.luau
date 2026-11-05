@@ -5,7 +5,7 @@ local Players = game:GetService('Players') :: Players
 
 local btn = script.Parent :: GuiButton
 local points = Players.LocalPlayer:WaitForChild('Points') :: IntValue
-local RemoteEvent = RepStor:WaitForChild('BTEvent') :: RemoteEvent
+local RemoteEvent = RepStor:WaitForChild('Remotes'):WaitForChild('BTEvent') :: RemoteEvent
 local addTime = 30
 local pointCost = 100
 
