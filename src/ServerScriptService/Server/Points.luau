@@ -106,9 +106,20 @@ function Points.start()
 		local winPart = win :: BasePart
 		winPart.Touched:Connect(function(hit: BasePart)
 			-- A limb's parent is the character. Other parts are ignored.
-			local player = Players:GetPlayerFromCharacter(hit.Parent :: Model)
+			local character = hit.Parent
+			if character == nil then
+				return
+			end
+
+			local player = Players:GetPlayerFromCharacter(character :: Model)
 			if player then
 				awardWin(player)
+			end
+
+			-- The end platform used to send the character back to the lobby from this part.
+			local root = character:FindFirstChild('HumanoidRootPart')
+			if root ~= nil and root:IsA('BasePart') then
+				root.Position = Vector3.new(0, 2, 0)
 			end
 		end)
 	end

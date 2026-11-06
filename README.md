@@ -16,12 +16,12 @@ The copy includes:
 - A round that stacks six random sections, then an end platform, and clears them when the timer reaches zero.
 - A timer, a map bar that follows the player's height, and a points store that can add time.
 
-`ReplicateLevel.server.luau` builds each tower. `Timer.server.luau` counts down `Workspace.Value`. `LevelModule.luau` stores each section's name, author, and color.
+`ServerScriptService.Server` starts the round, the clock, the points, the lobby, and the kill parts. `ReplicatedStorage.Client` starts the timer label, the points store, and the map bar. `ReplicatedStorage.Modules.LevelModule` stores each section's name, author, and color. The twelve sections, the blank `LevelTemplate`, and the end platform live in `ServerStorage`.
 
 # How to use
 
 ## Requirements
-[ Roblox Studio ]( https://create.roblox.com/ ) and [ Rokit ]( https://github.com/rojo-rbx/rokit ) are required. Rokit installs the Rojo version pinned in `rokit.toml`.
+[ Roblox Studio ]( https://create.roblox.com/ ) and [ Rokit ]( https://github.com/rojo-rbx/rokit ) are required. Rokit installs the tool versions pinned in `rokit.toml`.
 
 Install the project tools by opening a shell and running the following command inside the project folder:
 ```sh
@@ -47,23 +47,35 @@ rojo build -o "alan-otoniel-garcia-hernandez-tower-of-hell-idea.rbxlx"
 ```
 The built file is ignored by Git. Open it in Roblox Studio when you want a place generated only from the files in this repository.
 
+## Check the scripts
+Format, lint, and run the point tests from the project folder:
+```sh
+stylua src tests
+selene src tests
+lune run tests/Points.spec
+```
+The tests live in `tests` and are not synced into the place.
+
 # Functions
 The gameplay below is copied from the original game. A timer counts down while players climb a stack of sections. Reaching the end awards points. When the timer reaches zero, everyone returns to the lobby and a new tower is built.
 
 ## The tower.
-`Replicate Level` clones six sections at random from the twelve models in `ReplicatedStorage`. Each section is stacked above the last and turned so the next one does not face the same way. The section name and author are written on its wall, and the matching slot on the map GUI takes that section's color. An end platform is placed on top.
+`Tower` clones six sections at random from the twelve models in `ServerStorage`. Each section is stacked above the last and turned so the next one does not face the same way. The section name and author are written on its wall, and the matching slot on the map GUI takes that section's color. An end platform is placed on top. Parts tagged `Kill` remove the character's health on touch.
 
 ## The timer.
-`Workspace.Value` is the time left. `Timer.server.luau` subtracts one from it every second until it reaches zero. The timer GUI shows that number. `BTEvent` can add time when the points store asks for it.
+`ReplicatedStorage.Value` is the time left. `Timer` subtracts one from it every second until it reaches zero. The timer label shows that number. `ReplicatedStorage.Remotes.BTEvent` can add 30 seconds when the points store spends 100 points.
 
 ## The climb.
-Players start in the lobby. A part in the lobby sends a character who touches it to the start of the end platform's path. The map GUI moves a bar from the character's height. Touching the win part on the end platform adds points.
+Players start in the lobby. The lobby teleport sends a character who touches it to the start of the end platform. The map GUI moves a bar from the character's height. Touching the win part on the end platform adds 100 points and sends the character to the lobby.
 
 ## Round end.
-The round waits until `Workspace.Value` is zero. The timer is set back to 180, characters are moved to the lobby spawn, and the six sections and the end platform are removed. The loop then builds another tower.
+The round waits until `ReplicatedStorage.Value` is zero. The timer is set back to 100, characters are moved to the lobby spawn, and the six sections and the end platform are removed. The loop then builds another tower.
 
 # Technologies
 - Programming Language: [ Luau ]( https://luau.org/ )
 - Engine: [ Roblox ]( https://create.roblox.com/ )
 - Project Sync: [ Rojo ]( https://github.com/rojo-rbx/rojo ) 7.7.1
 - Toolchain Manager: [ Rokit ]( https://github.com/rojo-rbx/rokit )
+- Formatter: [ StyLua ]( https://github.com/JohnnyMorganz/StyLua ) 2.6.0
+- Linter: [ Selene ]( https://github.com/Kampfkarren/selene ) 0.32.0
+- Test runner: [ Lune ]( https://github.com/lune-org/lune ) 0.11.1
