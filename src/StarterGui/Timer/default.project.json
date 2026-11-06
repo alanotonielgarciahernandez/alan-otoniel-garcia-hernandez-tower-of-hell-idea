@@ -3,10 +3,7 @@
   "tree": {
     "$path": "gui.rbxmx",
     "Time": {
-      "$path": "Time.rbxmx",
-      "SetTime": {
-        "$path": "SetTime.client.luau"
-      }
+      "$path": "Time.rbxmx"
     }
   }
 }
