@@ -63,7 +63,7 @@ The gameplay below is copied from the original game. A timer counts down while p
 `Tower` clones six sections at random from the twelve models in `ServerStorage`. Each section is stacked above the last and turned so the next one does not face the same way. The section name and author are written on its wall, and the matching slot on the map GUI takes that section's color. An end platform is placed on top. Parts tagged `Kill` remove the character's health on touch.
 
 ## The timer.
-`ReplicatedStorage.Value` is the time left. `Timer` subtracts one from it every second until it reaches zero. The timer label shows that number. `ReplicatedStorage.Remotes.BTEvent` can add 30 seconds when the points store spends 100 points.
+`ReplicatedStorage.Value` is the time left. `Timer` subtracts one from it every second, and counts again after each round sets the clock back. The timer label shows that number. `ReplicatedStorage.Remotes.BTEvent` can add 30 seconds when the points store spends 100 points.
 
 ## The climb.
 Players start in the lobby. The lobby teleport sends a character who touches it to the start of the end platform. The map GUI moves a bar from the character's height. Touching the win part on the end platform adds 100 points and sends the character to the lobby.
