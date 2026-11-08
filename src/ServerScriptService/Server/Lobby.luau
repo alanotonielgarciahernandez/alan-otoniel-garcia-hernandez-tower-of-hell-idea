@@ -90,21 +90,40 @@ local function watchEndRainbow(child: Instance)
 	end
 end
 
-local function connectTeleport(part: BasePart)
-	-- The original script looked up the first end platform and kept that reference.
-	task.wait(1)
+-- The finish course cloned into Workspace. Its Start pad is the entrance of that floor.
+local function endFloorStart(): BasePart?
 	local Workspace = game:GetService('Workspace') :: Workspace
-	local ending = Workspace:WaitForChild('End')
-	local destination = (ending :: any).Start :: BasePart
+	local ending = Workspace:FindFirstChild('End')
+	if ending == nil then
+		return nil
+	end
+	local start = ending:FindFirstChild('Start')
+	if start ~= nil and start:IsA('BasePart') then
+		return start
+	end
+	return nil
+end
 
+local function connectTeleport(part: BasePart)
 	part.Touched:Connect(function(hit: BasePart)
 		local character = hit.Parent
 		if character == nil then
 			return
 		end
 
-		local root = character:WaitForChild('HumanoidRootPart') :: BasePart
-		root.Position = destination.Position
+		local root = character:FindFirstChild('HumanoidRootPart')
+		if root == nil or not root:IsA('BasePart') then
+			return
+		end
+
+		-- Look up the current round. The previous finish course is destroyed when the timer ends.
+		local start = endFloorStart()
+		if start == nil then
+			return
+		end
+
+		-- Start is a thin pad. The root has to sit above it or the character falls through.
+		root.CFrame = start.CFrame + Vector3.new(0, start.Size.Y / 2 + 3, 0)
 	end)
 end
 
