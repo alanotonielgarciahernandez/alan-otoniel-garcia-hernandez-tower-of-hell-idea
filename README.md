@@ -66,7 +66,7 @@ The gameplay below is copied from the original game. A timer counts down while p
 `ReplicatedStorage.Value` is the time left. `Timer` subtracts one from it every second, and counts again after each round sets the clock back. The timer label shows that number. `ReplicatedStorage.Remotes.BTEvent` can add 30 seconds when the points store spends 100 points.
 
 ## The climb.
-Players start in the lobby. The lobby teleport sends a character who touches it to the start of the end platform. The map GUI moves a bar from the character's height. Touching the win part on the end platform adds 100 points on the server and sends the character above the lobby spawn. The balance stays on the player, so respawning does not clear it.
+Players start in the lobby. The lobby teleport sends a character who touches it to the start of the end platform. The map marker follows the local character's height and picks up the new character after a respawn. Touching the win part on the end platform adds 100 points on the server and sends the character above the lobby spawn. The balance stays on the player, so respawning does not clear it.
 
 ## Round end.
 The round waits until `ReplicatedStorage.Value` is zero. The timer is set back to the number that object started with. Loaded characters are moved above the lobby spawn, and characters that are still respawning are skipped. The six sections and the end platform are removed either way. The loop then builds another tower.
