@@ -3,6 +3,33 @@
 -- Builds a tower, waits out the round, then builds another.
 local Tower = {}
 
+-- Half the part's height in world Y. A yaw-only pad uses Size.Y; a tilted pad does not.
+local function verticalHalf(part: BasePart): number
+	local cf = part.CFrame
+	local size = part.Size
+	return math.abs(cf.RightVector.Y) * size.X / 2
+		+ math.abs(cf.UpVector.Y) * size.Y / 2
+		+ math.abs(cf.LookVector.Y) * size.Z / 2
+end
+
+local function pad(model: Model, name: string): BasePart
+	local part = model:FindFirstChild(name)
+	assert(part ~= nil and part:IsA('BasePart'), name .. ' pad is missing')
+	return part :: BasePart
+end
+
+-- Pivot Y that sets this model's Start bottom on the previous section's End top.
+local function pivotAbove(model: Model, previousTop: number): number
+	local start = pad(model, 'Start')
+	local bottomOffset = (start.Position.Y - verticalHalf(start)) - model:GetPivot().Position.Y
+	return previousTop - bottomOffset
+end
+
+local function exitTop(model: Model): number
+	local ending = pad(model, 'End')
+	return ending.Position.Y + verticalHalf(ending)
+end
+
 function Tower.start()
 	task.spawn(function()
 		local RepStor = game:GetService('ReplicatedStorage') :: ReplicatedStorage
@@ -46,6 +73,8 @@ function Tower.start()
 
 		while true do
 			local placed: { Model } = {}
+			-- World Y of the previous section's End top. The next Start rests on it.
+			local previousTop = 0
 
 			for i = 1, 6 do
 				local random = math.random(1, 12)
@@ -57,13 +86,16 @@ function Tower.start()
 				local clon = template:Clone() :: SectionModel
 				local model = clon :: Model
 				model.Parent = Workspace
+				-- The first section keeps the original pivot. Later ones follow the section below.
+				local placeY = if i == 1 then floor else pivotAbove(model, previousTop)
 				if rot == false then
-					model:PivotTo(CFrame.new(0, floor, 0) * CFrame.Angles(0, math.rad(112.5), 0))
+					model:PivotTo(CFrame.new(0, placeY, 0) * CFrame.Angles(0, math.rad(112.5), 0))
 					rot = true
 				else
-					model:PivotTo(CFrame.new(0, floor, 0) * CFrame.Angles(0, math.rad(-67.5), 0))
+					model:PivotTo(CFrame.new(0, placeY, 0) * CFrame.Angles(0, math.rad(-67.5), 0))
 					rot = false
 				end
+				previousTop = exitTop(model)
 
 				task.wait()
 				for _, plr in Players:GetPlayers() do
@@ -75,17 +107,17 @@ function Tower.start()
 
 				clon.Walls.TextWall.SurfaceGui.LevelName.Text = info.LevelName
 				clon.Walls.TextWall.SurfaceGui.Author.Text = info.Author
-				floor += 15.5
 				placed[i] = model
 			end
 
 			local TheEnd = End:Clone() :: Model
 			TheEnd.Parent = Workspace
+			local endY = pivotAbove(TheEnd, previousTop)
 			if rot == true then
-				TheEnd:PivotTo(CFrame.new(0, floor + 12, 0) * CFrame.Angles(0, math.rad(180), 0))
+				TheEnd:PivotTo(CFrame.new(0, endY, 0) * CFrame.Angles(0, math.rad(180), 0))
 				rot = false
 			else
-				TheEnd:PivotTo(CFrame.new(0, floor + 12, 0) * CFrame.Angles(0, math.rad(0), 0))
+				TheEnd:PivotTo(CFrame.new(0, endY, 0) * CFrame.Angles(0, math.rad(0), 0))
 				rot = false
 			end
 

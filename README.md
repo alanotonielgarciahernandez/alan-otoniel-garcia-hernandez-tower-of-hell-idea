@@ -60,7 +60,7 @@ The tests live in `tests` and are not synced into the place.
 The gameplay below is copied from the original game. A timer counts down while players climb a stack of sections. Reaching the end awards points. When the timer reaches zero, everyone returns to the lobby and a new tower is built.
 
 ## The tower.
-`Tower` clones six sections at random from the twelve models in `ServerStorage`. Each section is stacked above the last and turned so the next one does not face the same way. The section name and author are written on its wall, and the matching slot on the map GUI takes that section's color. An end platform is placed on top. Parts tagged `Kill` remove the character's health on touch.
+`Tower` clones six sections at random from the twelve models in `ServerStorage`. Each section is stacked so its `Start` pad sits on the previous section's `End` pad, and turned so the next one does not face the same way. The section name and author are written on its wall, and the matching slot on the map GUI takes that section's color. An end platform is placed on top. Parts tagged `Kill` remove the character's health on touch.
 
 ## The timer.
 `ReplicatedStorage.Value` is the time left. `Timer` subtracts one from it every second, and counts again after each round sets the clock back. The timer label shows that number. `ReplicatedStorage.Remotes.BTEvent` can add 30 seconds when the points store spends 100 points.
