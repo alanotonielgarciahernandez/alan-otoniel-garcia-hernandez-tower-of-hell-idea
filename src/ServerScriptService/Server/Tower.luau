@@ -70,11 +70,42 @@ function Tower.start()
 		local floor = 23.5
 		-- Alternates the facing of each section so two in a row do not share a direction.
 		local rot = false
+		-- Colors for the tower that is up now. Slot 1 is filled before most maps exist.
+		local colors: { Color3 } = {}
+		local roundId = 0
+
+		local function paint(player: Player, seenRound: number)
+			local playerGui = player:FindFirstChild('PlayerGui') or player:WaitForChild('PlayerGui', 60)
+			if playerGui == nil or seenRound ~= roundId then
+				return
+			end
+			local map = playerGui:WaitForChild('Map', 60)
+			if map == nil or seenRound ~= roundId then
+				return
+			end
+			for index, color in colors do
+				if seenRound ~= roundId then
+					return
+				end
+				local slot = map:FindFirstChild(tostring(index))
+				if slot ~= nil and slot:IsA('GuiObject') then
+					slot.BackgroundColor3 = color
+				end
+			end
+		end
+
+		-- A player who joins after the tower is built still needs every slot filled.
+		Players.PlayerAdded:Connect(function(player: Player)
+			task.spawn(paint, player, roundId)
+		end)
 
 		while true do
 			local placed: { Model } = {}
 			-- World Y of the previous section's End top. The next Start rests on it.
 			local previousTop = 0
+			roundId += 1
+			local seenRound = roundId
+			table.clear(colors)
 
 			for i = 1, 6 do
 				local random = math.random(1, 12)
@@ -98,11 +129,10 @@ function Tower.start()
 				previousTop = exitTop(model)
 
 				task.wait()
+				-- Keep the color with the round, then paint whoever already has a map.
+				colors[i] = info.Color
 				for _, plr in Players:GetPlayers() do
-					-- Map slots are numbered 1 through 6, matching this section's place in the tower.
-					local map = plr.PlayerGui:WaitForChild('Map') :: any
-					local slot = map[i] :: GuiObject
-					slot.BackgroundColor3 = info.Color
+					task.spawn(paint, plr, seenRound)
 				end
 
 				clon.Walls.TextWall.SurfaceGui.LevelName.Text = info.LevelName
