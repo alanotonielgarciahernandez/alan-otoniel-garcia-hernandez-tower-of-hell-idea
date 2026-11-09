@@ -8,7 +8,7 @@ function Timer.start()
 	-- The timer label reads this same IntValue.
 	local timeLeft = RepStor:WaitForChild('Value') :: IntValue
 
-	-- One second per loop. At zero, Tower sets the next round back to 100.
+	-- One second per loop. At zero, Tower sets the next round back to the starting value.
 	-- Stay in the loop so that reset is counted down too.
 	task.spawn(function()
 		while task.wait(1) do

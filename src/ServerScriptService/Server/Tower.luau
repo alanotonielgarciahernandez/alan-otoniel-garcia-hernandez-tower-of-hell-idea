@@ -8,6 +8,8 @@ function Tower.start()
 		local RepStor = game:GetService('ReplicatedStorage') :: ReplicatedStorage
 		local ServerStorage = game:GetService('ServerStorage') :: ServerStorage
 		local timeLeft = RepStor:WaitForChild('Value') :: IntValue
+		-- The countdown replaces this number. Every round starts from the value set on the object.
+		local roundLength = timeLeft.Value
 		local Players = game:GetService('Players') :: Players
 		local Workspace = game:GetService('Workspace') :: Workspace
 
@@ -91,7 +93,7 @@ function Tower.start()
 				task.wait()
 			until timeLeft.Value == 0
 
-			timeLeft.Value = 100
+			timeLeft.Value = roundLength
 			floor = 23.5
 
 			local lobby = Workspace:WaitForChild('Lobby') :: Folder & { SpawnLocation: SpawnLocation }
