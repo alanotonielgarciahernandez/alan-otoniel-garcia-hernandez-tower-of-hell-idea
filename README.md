@@ -69,7 +69,7 @@ The gameplay below is copied from the original game. A timer counts down while p
 Players start in the lobby. The lobby teleport sends a character who touches it to the start of the end platform. The map GUI moves a bar from the character's height. Touching the win part on the end platform adds 100 points on the server and sends the character above the lobby spawn. The balance stays on the player, so respawning does not clear it.
 
 ## Round end.
-The round waits until `ReplicatedStorage.Value` is zero. The timer is set back to the number that object started with, characters are moved to the lobby spawn, and the six sections and the end platform are removed. The loop then builds another tower.
+The round waits until `ReplicatedStorage.Value` is zero. The timer is set back to the number that object started with. Loaded characters are moved above the lobby spawn, and characters that are still respawning are skipped. The six sections and the end platform are removed either way. The loop then builds another tower.
 
 # Technologies
 - Programming Language: [ Luau ]( https://luau.org/ )

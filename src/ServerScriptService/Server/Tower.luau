@@ -96,12 +96,14 @@ function Tower.start()
 			timeLeft.Value = roundLength
 			floor = 23.5
 
-			local lobby = Workspace:WaitForChild('Lobby') :: Folder & { SpawnLocation: SpawnLocation }
+			local spawnPad = Workspace:WaitForChild('Lobby'):WaitForChild('SpawnLocation') :: BasePart
+			-- The pad's center is inside the lobby floor. A missing root means the character is respawning.
+			local aboveSpawn = spawnPad.CFrame + Vector3.new(0, spawnPad.Size.Y / 2 + 3, 0)
 			for _, plr in Players:GetPlayers() do
 				local character = plr.Character
-				if character then
-					local root = character:FindFirstChild('HumanoidRootPart') :: BasePart
-					root.CFrame = lobby.SpawnLocation.CFrame
+				local root = if character ~= nil then character:FindFirstChild('HumanoidRootPart') else nil
+				if character ~= nil and root ~= nil and root:IsA('BasePart') then
+					character:PivotTo(aboveSpawn)
 				end
 			end
 
