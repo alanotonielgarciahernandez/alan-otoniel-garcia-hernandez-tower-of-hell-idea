@@ -38,6 +38,8 @@ function Points.start()
 	local timeLeft = RepStor:WaitForChild('Value') :: IntValue
 	-- The store button fires this. The number it sends is checked below and is not trusted on its own.
 	local buyTime = RepStor:WaitForChild('Remotes'):WaitForChild('BTEvent') :: RemoteEvent
+	-- The win pad used to send the character to a fixed point inside the lobby floor.
+	local spawnPad = Workspace:WaitForChild('Lobby'):WaitForChild('SpawnLocation') :: BasePart
 
 	-- Authoritative balances. Editing the Points value from a client does not change this table.
 	local points: { [Player]: number } = {}
@@ -116,10 +118,10 @@ function Points.start()
 				awardWin(player)
 			end
 
-			-- The end platform used to send the character back to the lobby from this part.
+			-- Stand above the spawn pad. Its center sits in the lobby floor.
 			local root = character:FindFirstChild('HumanoidRootPart')
 			if root ~= nil and root:IsA('BasePart') then
-				root.Position = Vector3.new(0, 2, 0)
+				root.CFrame = spawnPad.CFrame + Vector3.new(0, spawnPad.Size.Y / 2 + 3, 0)
 			end
 		end)
 	end
