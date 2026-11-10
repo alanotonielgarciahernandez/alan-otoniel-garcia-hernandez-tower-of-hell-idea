@@ -131,7 +131,7 @@ function Lobby.start()
 	local Workspace = game:GetService('Workspace') :: Workspace
 	local lobby = Workspace:WaitForChild('Lobby')
 	local rainbow = lobby:WaitForChild('Logo'):WaitForChild('Rainbow') :: BasePart
-	local teleport = lobby:WaitForChild('Teleport') :: BasePart
+	local teleport = lobby:WaitForChild('Teleport'):WaitForChild('TeleportPad') :: BasePart
 
 	task.spawn(cycleColor, rainbow)
 	task.spawn(connectTeleport, teleport)
