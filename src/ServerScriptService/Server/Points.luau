@@ -45,6 +45,24 @@ function Points.start()
 	local points: { [Player]: number } = {}
 	-- Players who just scored, so one touch cannot award points on every frame.
 	local winCooldown: { [Player]: boolean } = {}
+	-- A failed read must not be written back over the saved balance.
+	local ready: { [Player]: boolean } = {}
+	local DataStoreService = game:GetService('DataStoreService') :: DataStoreService
+	local pointStore = DataStoreService:GetDataStore('PlayerPoints')
+
+	local function save(player: Player)
+		if not ready[player] then
+			return
+		end
+		local amount = points[player]
+		if amount == nil then
+			return
+		end
+		local userId = player.UserId
+		pcall(function()
+			pointStore:SetAsync(tostring(userId), amount)
+		end)
+	end
 
 	-- Records the balance, then copies it to the player's Points value for the store label.
 	local function setPoints(player: Player, amount: number)
@@ -69,13 +87,34 @@ function Points.start()
 		pointsValue.Name = 'Points'
 		pointsValue.Value = 0
 		pointsValue.Parent = player
+
+		task.spawn(function()
+			local ok, saved = pcall(function()
+				return pointStore:GetAsync(tostring(player.UserId))
+			end)
+			if player.Parent == nil or not ok then
+				return
+			end
+			if typeof(saved) == 'number' then
+				setPoints(player, math.max(0, math.floor(saved)))
+			end
+			ready[player] = true
+		end)
 	end
 
 	Players.PlayerAdded:Connect(addPlayer)
-	-- Drops stored rows when a player leaves so the tables do not keep growing.
+	-- Saves the balance, then drops the row so the tables do not keep growing.
 	Players.PlayerRemoving:Connect(function(player: Player)
+		save(player)
 		points[player] = nil
 		winCooldown[player] = nil
+		ready[player] = nil
+	end)
+	-- A shutdown can skip PlayerRemoving, so write every loaded balance first.
+	game:BindToClose(function()
+		for _, player in Players:GetPlayers() do
+			save(player)
+		end
 	end)
 	-- Covers players who joined before this script connected PlayerAdded.
 	for _, player in Players:GetPlayers() do
@@ -84,6 +123,9 @@ function Points.start()
 
 	-- Grants the win reward once, then ignores that player until the cooldown ends.
 	local function awardWin(player: Player)
+		if not ready[player] then
+			return
+		end
 		local balance = points[player]
 		assert(balance, 'player has no point balance')
 		local newBalance, cooling = Points.applyWin(balance, winCooldown[player] == true)
@@ -93,6 +135,7 @@ function Points.start()
 
 		winCooldown[player] = cooling
 		setPoints(player, newBalance)
+		task.spawn(save, player)
 		task.delay(WIN_COOLDOWN, function()
 			winCooldown[player] = nil
 		end)
@@ -140,6 +183,9 @@ function Points.start()
 	-- Spends points before adding time. Any other payload is ignored.
 	buyTime.OnServerEvent:Connect(function(player: Player, addTime: unknown)
 		-- The store sends 30. Any other type or amount is rejected.
+		if not ready[player] then
+			return
+		end
 		local balance = points[player] or 0
 		local newBalance, newClock = Points.applyPurchase(balance, timeLeft.Value, addTime)
 		if newBalance == balance and newClock == timeLeft.Value then
@@ -147,6 +193,7 @@ function Points.start()
 		end
 
 		setPoints(player, newBalance)
+		task.spawn(save, player)
 		timeLeft.Value = newClock
 	end)
 end
