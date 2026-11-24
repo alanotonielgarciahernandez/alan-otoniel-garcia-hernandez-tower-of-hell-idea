@@ -1,81 +1,85 @@
-<div align='center'>
+<div align="center">
 
-  #### Alan Otoniel García Hernández Tower of Hell Idea.
+# Tower of Hell Idea
+
+**Roblox experience inspired by Tower of Hell. Climb a randomly generated tower before the timer runs out.**  
+**Experiencia en Roblox inspirada en Tower of Hell. Escala una torre generada aleatoriamente antes de que se acabe el tiempo.**
+
+[ ![ Play on Roblox ]( https://img.shields.io/badge/Play_on_Roblox-Visit_Game-brightgreen?style=flat-square&logo=roblox&logoColor=white ) ]( https://www.roblox.com/games/8320991483/Tower-of-Hell-Idea )
+
 </div>
 
-# Current state
-Game is functional and fully playable with low effort made levels.
+---
 
-# Information
-Started in December, 2021. This experience is a copy of the original Tower of Hell game, [ Tower of Hell ]( https://www.roblox.com/games/1962086868/Tower-of-Hell ) by YXCeptional Studios. The lobby, the sections, and the rest of the gameplay content come from that game. This repository is the Rojo export of my published copy, kept so I can read and version those files outside Roblox Studio.
+## Demo / Demostración
 
-I published the copy to test what I knew. I do not earn anything from it beyond that practice. Bugs can still appear while playing, and I only fix or extend the place when I decide to.
+**Live / En vivo:** [ Play on Roblox ]( https://www.roblox.com/games/8320991483/Tower-of-Hell-Idea )
 
-The copy includes:
-- A lobby and twelve tower sections saved as models.
-- A round that stacks six random sections, then an end platform, and clears them when the timer reaches zero.
-- A timer, a map bar that follows the player's height, and a points store that can add time.
+<!-- Add screenshots -->
+![ Lobby ]( ./docs/screenshots/lobby.png )
+![ Tower ]( ./docs/screenshots/tower.png )
 
-`ServerScriptService.Server` starts the round, the clock, the points, the lobby, and the kill parts. `ReplicatedStorage.Client` starts the timer label, the points store, and the map bar. `ReplicatedStorage.Modules.LevelModule` stores each section's name, author, and color. The twelve sections, the blank `LevelTemplate`, and the end platform live in `ServerStorage`.
+## What it does / Qué hace
 
-# How to use
+- Generates a tower by stacking random sections.  
+  *Genera una torre apilando secciones aleatorias.*
 
-## Requirements
-[ Roblox Studio ]( https://create.roblox.com/ ) and [ Rokit ]( https://github.com/rojo-rbx/rokit ) are required. Rokit installs the tool versions pinned in `rokit.toml`.
+- Players must reach the top before the timer reaches zero.  
+  *Los jugadores deben llegar a la cima antes de que el tiempo se acabe.*
 
-Install the project tools by opening a shell and running the following command inside the project folder:
-```sh
+- Reaching the end awards points.  
+  *Llegar al final otorga puntos.*
+
+- When time runs out, everyone returns to the lobby and a new tower is generated.  
+  *Cuando se acaba el tiempo, todos regresan al lobby y se genera una nueva torre.*
+
+## Tech Stack / Tecnologías
+
+- **Language / Lenguaje:** Luau
+- **Engine:** Roblox
+- **Project Sync:** Rojo 7.7.1
+- **Toolchain Manager:** Rokit
+- **Formatter:** StyLua
+- **Linter:** Selene
+
+## How to run it / Cómo correrlo
+
+### Requirements / Requisitos
+
+- Roblox Studio
+- Rokit
+
+### Steps / Pasos
+
+```bash
+git clone https://github.com/alanotonielgarciahernandez/alan-otoniel-garcia-hernandez-tower-of-hell-idea.git
+cd alan-otoniel-garcia-hernandez-tower-of-hell-idea
 rokit install
-```
-Install the matching Studio plugin once:
-```sh
 rojo plugin install
 ```
-Restart Studio after installing the plugin.
 
-## Open the place
-`game.rbxl` is the local copy of the published place. It is ignored by Git. Open that file in Roblox Studio, then start the Rojo server from the project folder:
-```sh
+Restart Roblox Studio after installing the plugin.
+Open the place in Studio and run:
+
+```bash
 rojo serve
 ```
-In Studio, connect the Rojo plugin to the server. The plugin syncs `src` into the open place.
 
-## Build the project
-Open a shell and run the command below to build a place file from this repository.
-```sh
-rojo build -o "alan-otoniel-garcia-hernandez-tower-of-hell-idea.rbxlx"
-```
-The built file is ignored by Git. Open it in Roblox Studio when you want a place generated only from the files in this repository.
+Then connect the Rojo plugin in Studio.
 
-## Check the scripts
-Format, lint, and run the point tests from the project folder:
-```sh
-stylua src tests
-selene src tests
-lune run tests/Points.spec
-```
-The tests live in `tests` and are not synced into the place.
+### Technical decisions / Decisiones técnicas
+- The project is managed with Rojo so the game logic stays as version-controlled Luau files.  
+  *El proyecto se gestiona con Rojo para que la lógica del juego permanezca como archivos Luau versionados.*
 
-# Functions
-The gameplay below is copied from the original game. A timer counts down while players climb a stack of sections. Reaching the end awards points. When the timer reaches zero, everyone returns to the lobby and a new tower is built.
+- Tower generation, timer, and points systems are separated into modules.  
+  *La generación de la torre, el temporizador y el sistema de puntos están separados en módulos.*
 
-## The tower.
-`Tower` clones six sections at random from the twelve models in `ServerStorage`. Each section is stacked so its `Start` pad sits on the previous section's `End` pad, and turned so the next one does not face the same way. The section name and author are written on its wall. Each section's color is kept for the round and applied to every player's map, including players whose map loads late. An end platform is placed on top. Parts tagged `Kill` remove the character's health on touch.
+- This is a practice project based on the original Tower of Hell mechanics.
+  *Es un proyecto de práctica basado en las mecánicas originales de Tower of Hell.*
 
-## The timer.
-`ReplicatedStorage.Value` is the time left. `Timer` subtracts one from it every second, and counts again after each round sets the clock back. The timer label shows that number and keeps showing it after a respawn. `ReplicatedStorage.Remotes.BTEvent` can add 30 seconds when the points store spends 100 points.
+### Status / Estado
+Practice project. The published version is available on Roblox.  
+*Proyecto de práctica. La versión publicada está disponible en Roblox.*
 
-## The climb.
-Players start in the lobby. The lobby teleport sends a character who touches it to the start of the end platform. The map bars are sized from each section's height. Each player has a mark at their height, with their headshot beside it. Touching the win part on the end platform adds 100 points on the server and sends the character above the lobby spawn. The balance is saved for that player, so respawning or leaving does not clear it.
-
-## Round end.
-The round waits until `ReplicatedStorage.Value` is zero. The timer is set back to the number that object started with. Loaded characters are moved above the lobby spawn, and characters that are still respawning are skipped. The six sections and the end platform are removed either way. The loop then builds another tower.
-
-# Technologies
-- Programming Language: [ Luau ]( https://luau.org/ )
-- Engine: [ Roblox ]( https://create.roblox.com/ )
-- Project Sync: [ Rojo ]( https://github.com/rojo-rbx/rojo ) 7.7.1
-- Toolchain Manager: [ Rokit ]( https://github.com/rojo-rbx/rokit )
-- Formatter: [ StyLua ]( https://github.com/JohnnyMorganz/StyLua ) 2.6.0
-- Linter: [ Selene ]( https://github.com/Kampfkarren/selene ) 0.32.0
-- Test runner: [ Lune ]( https://github.com/lune-org/lune ) 0.11.1
+### License / Licencia
+MIT
